@@ -2,6 +2,10 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 def create_product_list(root, products, columns=4):
+
+    # Lalbel for product list
+    lbl_products = tk.Label(root, text="Feature products", font=("Arial", 16, "bold"))
+    lbl_products.pack(side="top", anchor="w", padx=10)
     frame_products = tk.Frame(root)
     frame_products.pack(pady=10)
 

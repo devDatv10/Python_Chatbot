@@ -3,7 +3,7 @@ import os
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
-
+from tkinter import messagebox as msg
 from components.footer import create_footer
 from components.header import create_header
 from components.category_menu import create_category_menu
@@ -43,6 +43,10 @@ def toggle_chat():
 def send_message():
     """Gửi tin nhắn của user và phản hồi bot."""
     msg = entry_msg.get().strip()
+    # Check if the message is empty
+    if not msg:
+        messagebox.showwarning("Cảnh báo", "Vui lòng nhập nội dung tin nhắn trước khi gửi!")
+        return
     if msg:
         add_message(f"Bạn: {msg}", "right")
         entry_msg.delete(0, tk.END) 
@@ -64,15 +68,18 @@ def add_message(msg, align="left"):
     chat_display.yview(tk.END)
 
 def on_entry_focus(event):
-    entry = event.widget
-    if entry.get() == "Tìm kiếm sản phẩm...":
+    entry = event.widget  # Lấy entry từ event
+    if entry.get() == "Tìm kiếm sản phẩm..." or entry.get() == "Nhập tin nhắn...":
         entry.delete(0, tk.END)
         entry.config(fg="black")
 
 def on_entry_focusout(event):
-    entry = event.widget
+    entry = event.widget  # Lấy entry từ event
     if entry.get().strip() == "":
-        entry.insert(0, "Tìm kiếm sản phẩm...")
+        if entry == search_entry:
+            entry.insert(0, "Tìm kiếm sản phẩm...")
+        elif entry == entry_msg:
+            entry.insert(0, "Nhập tin nhắn...")
         entry.config(fg="gray")
 
 
@@ -94,6 +101,7 @@ create_category_menu(root, categories)
 frame_products = tk.Frame(root)
 frame_products.pack(pady=10)
 
+
 # Danh sách sản phẩm mẫu
 products = [
     {"name": "MacBook Air 2024", "image": "../../images/macbook-air-2024.jpg"},
@@ -105,6 +113,7 @@ products = [
     {"name": "Laptop Dell XPS 13", "image": "../../images/laptopdell-XPS-13.jpg"},
     {"name": "Asus ROG Strix G15", "image": "../../images/asus-rog-strix-G15.jpg"},
 ]
+
 
 create_product_list(root, products, columns=4)
 

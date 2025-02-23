@@ -147,7 +147,39 @@ word2vec_model.save(os.path.join(model_dir, "word2vec.model"))
 with open(os.path.join(model_dir, "tfidf_vectorizer.pkl"), "wb") as f:
     pickle.dump(vectorizer, f)
 
-print("Đã lưu tất cả mô hình vào thư mục 'models'.")
+# print("Đã lưu tất cả mô hình vào thư mục 'models'.")
+
+def split_sentences(text):
+    # Danh sách từ khóa bắt đầu câu
+    keywords = [
+        "Dạ có shop tôi có sản phẩm", "Vâng sản phẩm", "Tôi thấy", 
+        "Shop xin tư vấn cho bạn sản phẩm", "là một sản phẩm tốt", 
+        "Bạn có thể xem qua", "bên shop tôi có", "chúng tôi xin giới thiệu", 
+        "Nếu bạn cần một sản phẩm mạnh mẽ", "Cấu hình của", "Với", 
+        "Thông số kỹ thuật của", "Con laptop", "Sản phẩm"
+    ]
+
+    # Tạo regex để tách câu dựa trên các từ khóa
+    pattern = r"(" + "|".join(map(re.escape, keywords)) + ")"
+    parts = re.split(pattern, text)
+
+    # Ghép lại theo nhóm từ khóa + nội dung
+    sentences = []
+    current_sentence = ""
+
+    for part in parts:
+        if part.strip():
+            if part in keywords:
+                if current_sentence:
+                    sentences.append(current_sentence.strip())  # Lưu câu trước đó
+                current_sentence = part  # Bắt đầu câu mới với từ khóa
+            else:
+                current_sentence += " " + part  # Ghép phần tiếp theo
+
+    if current_sentence:
+        sentences.append(current_sentence.strip())  # Thêm câu cuối cùng
+
+    return sentences
 
 def predict_answer(question, vectorizer, model, topic_map, word2vec_model, answers):
     cleaned_question = preprocess_data([question])[0][0]
@@ -159,7 +191,14 @@ def predict_answer(question, vectorizer, model, topic_map, word2vec_model, answe
     similarities = [(i, np.dot(question_vec, sentence_to_vec(q, word2vec_model))) for i, q in enumerate(X_train)]
     best_match_idx = max(similarities, key=lambda x: x[1])[0]
 
-    return answers[best_match_idx]
+    full_answer = answers[best_match_idx]  # Câu trả lời gốc
+
+    # Tách câu dựa vào các từ khóa
+    sentences = split_sentences(full_answer)
+
+    # Trả về câu đầu tiên hoặc câu ngẫu nhiên
+    return sentences[0] if sentences else full_answer
+
 
 
 topic_counts = Counter(y_labels)

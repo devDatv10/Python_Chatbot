@@ -114,9 +114,9 @@ def generate_responses(question, products):
     response_list = []
     
     response_templates = [
-        "Dạ có, shop tôi có sản phẩm {name} với giá {price}.",
+        "Dạ có shop tôi có sản phẩm {name} với giá {price}.",
         "Chúng tôi xin giới thiệu {name} có giá {price}.",
-        "Vâng, sản phẩm {name} hoàn toàn phù hợp với yêu cầu của bạn!",
+        "Vâng sản phẩm {name} hoàn toàn phù hợp với yêu cầu của bạn!",
         "Tôi thấy {name} là một lựa chọn hợp lý, giá chỉ {price}.",
         "Bên shop tôi có {name}, bạn có thể tham khảo với mức giá {price}.",
         "Shop xin tư vấn cho bạn sản phẩm {name}, hiện tại sản phẩm chỉ có giá là {price}.",

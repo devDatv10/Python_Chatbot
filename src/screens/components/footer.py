@@ -2,7 +2,7 @@ import tkinter as tk
 
 def create_footer(root):
     """Tạo footer với 3 cột: Tổng đài, Công ty, Thông tin khác"""
-    footer_frame = tk.Frame(root, bg="white" )
+    footer_frame = tk.Frame(root,  )
     footer_frame.pack(side="bottom", fill="x", pady=10)
 
     column1 = tk.Frame(footer_frame, )
